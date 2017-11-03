@@ -52,14 +52,14 @@ class BrandController extends Controller
     //分页列表
     public function actionList(){
         //得到全部数据
-        $query=Brand::find();
+        $query=Brand::find()->where(['status'=>1]);
         //分页工具类
         $pager=new Pagination();
         //总条数
         $pager->totalCount=$query->count();
         $pager->pageSize=2;//每业显示2条
         //查询一页的数据
-        $models=$query->where(['status'=>1])->limit($pager->limit)->offset($pager->offset)->all();
+        $models=$query->limit($pager->limit)->offset($pager->offset)->all();
         return $this->render('list',['models'=>$models,'pager'=>$pager]);
 
     }
