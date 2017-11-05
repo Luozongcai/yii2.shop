@@ -18,9 +18,9 @@ class Brand extends ActiveRecord
     public function rules()
     {
         return [
-            [['name','intro','status','sort'],'required'],
+            [['name','intro','status','sort','logo'],'required'],
             //上传文件验证规则
-            ['imgFile','file','extensions'=>['jpg','png','gif'],'skipOnEmpty'=>false],
+           // ['imgFile','file','extensions'=>['jpg','png','gif'],'skipOnEmpty'=>false],
                ];
     }
 
@@ -28,7 +28,7 @@ class Brand extends ActiveRecord
     {
 
         return [
-            'imgFile'=>'品牌Logo',
+            'logo'=>'品牌Logo',
             'name'=>'品牌名称',
             'intro'=>'简介',
             'status'=>'状态',

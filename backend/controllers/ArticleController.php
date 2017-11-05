@@ -47,7 +47,7 @@ class ArticleController extends Controller
         $pager=new Pagination();
         //总条数
         $pager->totalCount=$query->count();
-        $pager->pageSize=2;//每业显示2条
+        $pager->pageSize=5;//每业显示2条
         //查询一页的数据
         $models=$query->limit($pager->limit)->offset($pager->offset)->all();
         return $this->render('category-list',['models'=>$models,'pager'=>$pager]);
@@ -98,9 +98,10 @@ class ArticleController extends Controller
             $model->load($request->post());
             if ($model->validate()){
                 //通过验证
+                $model->create_time=time();
                 $model->save();//保存数据
             }
-            $id = \Yii::$app->db->getLastInsertID();//获取刚保存的id
+            $id = $model->id;//获取刚保存的id
 
 
             //保存article_detail表数据
@@ -121,14 +122,16 @@ class ArticleController extends Controller
     }
     //文章列表
     public function actionList(){
-        $query=Article::find();
+
+        $query=Article::find()->where(['status'=>1]);
         //分页工具类
         $pager=new Pagination();
         //总条数
         $pager->totalCount=$query->count();
-        $pager->pageSize=2;//每业显示2条
+        $pager->pageSize=5;//每业显示2条
         //查询一页的数据
-        $models=$query->where(['status'=>1])->limit($pager->limit)->offset($pager->offset)->all();
+        $models=$query->limit($pager->limit)->offset($pager->offset)->all();
+      // var_dump($models);die;
         return $this->render('list',['models'=>$models,'pager'=>$pager]);
 
 

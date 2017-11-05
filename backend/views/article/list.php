@@ -1,10 +1,12 @@
 <h1>文章列表</h1>
+
 <table class="table table-bordered well">
     <tr>
         <th>ID</th>
         <th>文章标题</th>
         <th>文章简介</th>
         <th>文章分类</th>
+        <th>添加时间</th>
         <th>操作</th>
     </tr>
     <?php foreach ($models as $model):?>
@@ -12,7 +14,10 @@
         <td><?=$model->id?></td>
         <td><?=$model->name?></td>
         <td><?=$model->intro?></td>
-        <td><?=$model->article_category_id?></td>
+
+      <!--  <td><?/*=$model->article_category->name*/?></td>-->
+        <td><?=\backend\models\Article::findOne($model->id)->getArticleCategory()->one()->name;?></td>
+        <td><?=date('Y-m-d H:i:s',$model->create_time)?></td>
 
         <td>
             <?=\yii\bootstrap\Html::a('修改',['edit','id'=>$model->id],['class'=>'btn btn-warning'])?>
@@ -20,9 +25,9 @@
         </td>
     </tr>
     <?php endforeach;?>
-        <tr>
-            <td><?=\yii\bootstrap\Html::a('添加',['add'],['class'=>'btn btn-primary  btn-lg']); ?></td>
-        </tr>
+       <!-- <tr>
+            <td><?/*=\yii\bootstrap\Html::a('添加',['add'],['class'=>'btn btn-primary  btn-lg']); */?></td>
+        </tr>-->
 
 </table>
 <?php

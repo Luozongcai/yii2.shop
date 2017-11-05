@@ -1,0 +1,11 @@
+1.库中保存{1,2,3}字符串,需转为实际意义.
+2.文章list页面获取分类数据,库中为分类id
+    (1)在article.php中写get方法
+     public function getArticleCategory(){
+           //获取列表分类数据
+            return $this->hasOne(ArticleCategory::className(),['id'=>'article_category_id']);
+       }
+      (2)在list页面
+      <?=$model->article_category->name?>  //该方法报错可使用下面方法
+      <?=\backend\models\Article::findOne($model->id)->getArticleCategory()->one()->name;?>
+3. 建表语句 yii migrate/create create_goods_category_table

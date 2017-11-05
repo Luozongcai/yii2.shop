@@ -17,9 +17,9 @@
         </td>
     </tr>
     <?php endforeach;?>
-        <tr>
-            <td><?=\yii\bootstrap\Html::a('添加',['add'],['class'=>'btn btn-primary  btn-lg']); ?></td>
-        </tr>
+      <!--  <tr>
+            <td><?/*=\yii\bootstrap\Html::a('添加',['add'],['class'=>'btn btn-primary  btn-lg']); */?></td>
+        </tr>-->
 
 </table>
 <?php
