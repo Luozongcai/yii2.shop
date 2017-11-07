@@ -11,9 +11,16 @@ namespace backend\models;
 
 use creocoder\nestedsets\NestedSetsBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 class GoodsCategory extends ActiveRecord
 {
+
+    public static function getItems(){
+
+        return ArrayHelper::map(self::find()->asArray()->all(),'id','name');//name是author表的作者
+    }
+
     public function behaviors() {
         return [
             'tree' => [
