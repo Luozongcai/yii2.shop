@@ -1,13 +1,17 @@
 <?php
+/**
+ * @var $this \yii\web\View
+ */
 
 //webuploader图片上传------------------------------------
 //1.注册css,js
 $this->registerCssFile('@web/webuploader/webuploader.css');
 $this->registerJsFile('@web/webuploader/webuploader.js',[
     'depends'=>\yii\web\JqueryAsset::className(),//指定依赖关系
+      'position'=>\yii\web\View::POS_END
 ]);
 
-$url=\yii\helpers\Url::to(['goods/upload']);
+$url=\yii\helpers\Url::to(['upload1?id='.$id]);
 //上传图片
 $this->registerJs(
     <<<Js
@@ -25,7 +29,7 @@ $this->registerJs(
     accept: {
         title: 'Images',
         extensions: 'gif,jpg,jpeg,bmp,png',
-        mimeTypes: 'image/jpg,image/jpeg,image/png,image/gif'
+        mimeTypes: 'image/jpg,image/jpeg,image/png,image/gif',
     }
 });
 
@@ -35,32 +39,35 @@ uploader.on( 'uploadSuccess', function( file ,response) {
     $("#img").attr('src',response.url);
     //将图片地址写入logo
     $("#brand-logo").val(response.url);
+     location.assign(location);
 });
+
 
 Js
 );
+
+//-----------------------------------
 ?>
     <!--dom结构部分  按钮-->
     <div id="uploader-demo">
         <!--用来存放item-->
         <div id="fileList" class="uploader-list"></div>
-        <div id="filePicker">选择图片</div>
+        <div id="filePicker">添加图片</div>
     </div>
-    <div><img id="img" width="1000" /></div>
-
-<?php
-//-----------------------------------
-
-?>
 <table class="table">
     <tr></tr>
     <tr>
         <th><h2>图片</h2></th>
         <th><h2>操作</h2></th>
     </tr>
+    <tr>
+        <td>
+           <!-- <div><img id="img" width="1000" /></div>-->
+        </td>
+    </tr>
     <?php foreach ($models as $model):?>
         <tr>
-            <td><img src="<?=$model->path?>" width="1000"></td>
+            <td><img  src="<?=$model->path?>" width="900"></td>
             <td>
                   <a href="javascript:;"  id="del" class="del btn-danger btn" data-id="<?=$model->id?>">删除</a>
             </td>

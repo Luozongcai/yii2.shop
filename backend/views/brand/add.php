@@ -17,7 +17,7 @@ $this->registerJsFile('@web/webuploader/webuploader.js',[
   //  'position'=>\yii\web\View::POS_END
 ]);
 
-    $url=\yii\helpers\Url::to(['upload']);
+    $url=\yii\helpers\Url::to(['upload1']);
 //上传图片
     $this->registerJs(
       <<<Js

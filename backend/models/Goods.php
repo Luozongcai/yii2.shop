@@ -33,10 +33,10 @@ class Goods extends ActiveRecord
     {
         return [
             [['name','status','sort','goods_category_id'],'required'],
-            [['brand_id','is_on_sale'],'required'],
+            [['brand_id','is_on_sale','logo'],'required'],
             [['market_price','shop_price','stock'],'integer'],
            //上传文件验证规则
-            ['imgFile','file','extensions'=>['jpg','png','gif'],'skipOnEmpty'=>false],
+           // ['imgFile','file','extensions'=>['jpg','png','gif'],'skipOnEmpty'=>false],
         ];
     }
 
@@ -53,7 +53,7 @@ class Goods extends ActiveRecord
             'shop_price'=>'商品价格',
             'stock'=>'库存',
             'is_on_sale'=>'是否在售',
-            'imgFile'=>'LOGO图片',
+            'logo'=>'LOGO图片',
 
         ];
     }

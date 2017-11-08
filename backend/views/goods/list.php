@@ -5,9 +5,11 @@ $form = \yii\bootstrap\ActiveForm::begin([
 'action'=>\yii\helpers\Url::toRoute(['goods/list']),
 'method'=>'get',
 ]);
-echo \yii\helpers\Html::input('text','name',$where);
-//echo \yii\helpers\Html::input('text','sn');
-echo \yii\bootstrap\Html::submitButton('搜索');
+echo "商品名称:".\yii\helpers\Html::input('text','name',$name);
+echo "货号:". \yii\helpers\Html::input('text','sn',$sn);
+echo "价格下限:". \yii\helpers\Html::input('text','down',$down);
+echo "价格上限:". \yii\helpers\Html::input('text','top',$top);
+echo \yii\bootstrap\Html::submitButton('搜索',['class'=>'btn btn-info']);
 \yii\bootstrap\ActiveForm::end();
 ?>
 
@@ -69,7 +71,7 @@ $url=\yii\helpers\Url::to(['goods/delete']);
 $this->registerJs(
     <<<JS
     $(".del").click(function(){
-        if(confirm('是否删除该品牌?')){
+        if(confirm('是否删除该商品?')){
             var url = "{$url}";
             var id = $(this).attr('data-id');
             var that = this;

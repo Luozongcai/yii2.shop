@@ -17,10 +17,26 @@ return [
             'csrfParam' => '_csrf-backend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'class'=>'yii\web\User',
+            //实现认证的接口的类
+            'identityClass' => 'backend\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
+            'loginUrl' => ['user/login'],
+            'on beforeLogin' => function($event) {
+                $user = $event->identity; //这里的就是User Model的实例了
+                $user->last_login_time = time();
+                $user->save();
+
+            },
+            'on afterLogin' => function($event) {
+                //the same
+            }
         ],
+
+
+
+
         'session' => [
             // this is the name of the session cookie used for login on the backend
             'name' => 'advanced-backend',

@@ -17,9 +17,9 @@ class GoodsGallery extends ActiveRecord
     public function rules()
     {
         return [
-            [['goods_id'],'required'],
+            [['goods_id','path'],'safe'],
             //上传文件验证规则
-             ['imgFile','file','extensions'=>['jpg','png','gif'],'skipOnEmpty'=>false],
+           //  ['imgFile','file','extensions'=>['jpg','png','gif'],'skipOnEmpty'=>false],
         ];
     }
 
