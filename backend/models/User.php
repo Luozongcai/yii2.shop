@@ -16,6 +16,7 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     public $password;
+    public $roles;
 public function behaviors()
 {
     return [
@@ -39,6 +40,7 @@ public function behaviors()
             'username'=>'账号',
             'email'=>'Email',
             'status'=>'状态',
+            'roles'=>'分配角色',
 
         ];
     }
@@ -47,7 +49,7 @@ public function behaviors()
     public function rules()
     {
         return [
-            [['username','password','email'],'required'],
+            [['username','password','email','roles'],'required'],
             ['status','safe'],
             [['username'], 'string', 'max' => 255],
             [['password'], 'string', 'max' => 100],
@@ -114,6 +116,7 @@ public function behaviors()
     public function getAuthKey()
     {
         // TODO: Implement getAuthKey() method.
+        return $this->auth_key;
     }
 
     /**
@@ -127,6 +130,7 @@ public function behaviors()
     public function validateAuthKey($authKey)
     {
         // TODO: Implement validateAuthKey() method.
+        return $this->getAuthKey() === $authKey;
     }
 
 

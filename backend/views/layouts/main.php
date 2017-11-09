@@ -71,6 +71,15 @@ AppAsset::register($this);
 
         ]],
 
+        ['label' => 'RBAC', 'items'=>[
+
+            ['label' => '添加角色', 'url' => ['/auth/add-role']],
+            ['label' => '角色列表', 'url' => ['/auth/list-role']],
+            ['label' => '添加权限', 'url' => ['/auth/add-permissions']],
+            ['label' => '权限列表', 'url' => ['/auth/list-permissions']],
+
+        ]],
+
     ];
 
 

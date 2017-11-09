@@ -14,11 +14,13 @@ class LoginForm extends Model
 {
     public $username;
     public $password;
+    public $rememberMe;
 
     public function rules()
     {
         return [
             [['username','password'],'required'],
+            ['rememberMe','safe'],
         ];
     }
 
@@ -26,7 +28,8 @@ class LoginForm extends Model
     {
         return [
             'username'=>'用户名',
-            'password'=>'密码'
+            'password'=>'密码',
+            'rememberMe'=>'记住密码'
         ];
     }
 
