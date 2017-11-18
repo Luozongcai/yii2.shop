@@ -28,12 +28,12 @@ $this->registerJsFile('@web/DataTables/media/js/jquery.dataTables.js',[
             <td><?=$model->name?></td>
             <td><?=$model->description?></td>
             <td>
-                <?=\yii\bootstrap\Html::a('修改',['edit','name'=>$model->name],['class'=>'btn btn-warning'])?>
+                <?=\yii\bootstrap\Html::a('修改',['edit-permissions','name'=>$model->name],['class'=>'btn btn-warning'])?>
                 <a href="javascript:;"  id="del" class="del btn-danger btn" data-id="<?=$model->name?>">删除</a>
             </td>
         </tr>
     <?php endforeach;?>
-   <!-- <tr>
+  <!--<tr>
         <td><?/*=\yii\bootstrap\Html::a('添加',['add-permissions'],['class'=>'btn btn-primary  btn-lg']); */?></td>
     </tr>-->
     </tbody>

@@ -22,10 +22,22 @@ use yii\web\UploadedFile;
 
 class GoodsController extends Controller
 {
+
+    public function  behaviors(){
+        return [
+            'rbac' => [
+                'class' =>\backend\filters\RnewFilter::className(),
+
+            ],
+        ];
+
+    }
     public $enableCsrfValidation=false;
     //添加商品分类
     public function actionCategoryAdd()
     {
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
         $model = new GoodsCategory();
         //parent_id设置默认值
         $model->parent_id = 0;
@@ -36,11 +48,14 @@ class GoodsController extends Controller
                 if ($model->parent_id == 0) {
                     //创建根节点
                     $model->makeRoot();
+
+                    $redis->del('goods-category');
                     return $this->redirect(['category-list']);
                 } else {
                     //添加子节点
                     $parent = GoodsCategory::findOne(['id' => $model->parent_id]);
                     $model->prependTo($parent);
+                    $redis->del('goods-category');
                     return $this->redirect(['category-list']);
                 }
 
@@ -59,7 +74,7 @@ class GoodsController extends Controller
         $pager = new Pagination();
         //总条数
         $pager->totalCount = $query->count();
-        $pager->pageSize = 5;//每业显示2条
+        $pager->pageSize = 10;//每业显示2条
         //查询一页的数据
         $models = $query->orderBy('tree ASC', 'lft ASC')->limit($pager->limit)->offset($pager->offset)->all();
         return $this->render('category-list', ['models' => $models, 'pager' => $pager]);
@@ -68,6 +83,9 @@ class GoodsController extends Controller
     //删除商品分类
     public function actionCategoryDelete()
     {
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
+
         $request = new Request();
         $id = $request->post('id');
         //如果有子节点则不能删除isleaf代表是叶子无子节点
@@ -77,6 +95,7 @@ class GoodsController extends Controller
         } else {
             $model = GoodsCategory::findOne(['id' => $id]);
             $model->deletewithchildren();//删除空节点
+            $redis->del('goods-category');
             return 'yes';
         }
     }
@@ -84,6 +103,9 @@ class GoodsController extends Controller
     //修改商品分类
     public function actionCategoryEdit($id)
     {
+        $redis = new \Redis();
+        $redis->connect('127.0.0.1');
+
         $model = GoodsCategory::findOne(['id' => $id]);
         $request = new Request();
         if ($request->isPost) {
@@ -97,12 +119,13 @@ class GoodsController extends Controller
                     } else {
                         $model->makeRoot();
                     }
-
+                    $redis->del('goods-category');
                     return $this->redirect(['category-list']);
                 } else {
                     //添加子节点
                     $parent = GoodsCategory::findOne(['id' => $model->parent_id]);
                     $model->prependTo($parent);
+                    $redis->del('goods-category');
                     return $this->redirect(['category-list']);
                 }
             }

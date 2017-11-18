@@ -12,14 +12,22 @@
         <td><?=$model->name?></td>
         <td><img src="<?=$model->logo?>" width="80"></td>
         <td>
-            <?=\yii\bootstrap\Html::a('修改',['edit','id'=>$model->id],['class'=>'btn btn-warning'])?>
-            <a href="javascript:;"  id="del" class="del btn-danger btn" data-id="<?=$model->id?>">删除</a>
+            <?php
+            if(\Yii::$app->user->can('brand/edit')){
+                echo  \yii\bootstrap\Html::a('修改',['edit','id'=>$model->id],['class'=>'btn btn-warning']);
+            }
+            if(\Yii::$app->user->can('brand/delete')){
+                echo   '<a href="javascript:;"  id="del" class="del btn-danger btn" data-id="<?=$model->id?>">删除</a>';
+
+            }
+            ?>
+            <!-- <a href="javascript:;"  id="del" class="del btn-danger btn" data-id="<?/*=$model->id*/?>">删除</a>-->
         </td>
     </tr>
     <?php endforeach;?>
-      <!--  <tr>
-            <td><?/*=\yii\bootstrap\Html::a('添加',['add'],['class'=>'btn btn-primary  btn-lg']); */?></td>
-        </tr>-->
+ <tr>
+            <td><?=\yii\bootstrap\Html::a('添加',['add'],['class'=>'btn btn-primary  btn-lg']); ?></td>
+        </tr>
 
 </table>
 <?php

@@ -11,7 +11,7 @@
             <td><?=$model->name?></td>
             <td><?=$model->description?></td>
               <td>
-                  <?=\yii\bootstrap\Html::a('修改',['edit','name'=>$model->name],['class'=>'btn btn-warning'])?>
+                  <?=\yii\bootstrap\Html::a('修改',['edit-role','name'=>$model->name],['class'=>'btn btn-warning'])?>
                   <a href="javascript:;"  id="del" class="del btn-danger btn" data-id="<?=$model->name?>">删除</a>
               </td>
         </tr>

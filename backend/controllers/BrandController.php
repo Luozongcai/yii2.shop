@@ -10,17 +10,29 @@ namespace backend\controllers;
 
 
 use backend\models\Brand;
+use backend\models\Goods;
 use Qiniu\Auth;
 use Qiniu\Storage\UploadManager;
 use yii\data\Pagination;
 use yii\helpers\Json;
 use yii\web\Controller;
+use backend\controllers\CommonController;
 use yii\web\Request;
 use yii\web\UploadedFile;
 
 class BrandController extends Controller
 
 {
+
+  public function  behaviors(){
+        return [
+            'rbac' => [
+                'class' =>\backend\filters\RnewFilter::className(),
+
+                    ],
+        ];
+
+    }
     public $enableCsrfValidation=false;
     //添加品牌
     public function actionAdd(){
@@ -57,18 +69,13 @@ class BrandController extends Controller
     }
     //删除品牌
     public function actionDelete(){
+
+
         $request = new Request();
         $id = $request->post('id');
-       $model= Brand::findOne(['id'=>$id]);
-        $model->status=-1;
-        $model->save(false);//保存数据
-        //跳转
-       return 'yes';
-
-
         //根据id查询分组是否有组员
-/*        $admin = Admin::find()->where(['group_id'=>$id])->all();
-        if($admin){
+        $goods = Goods::findOne(['goods_category_id'=>$id]);
+        if($goods){
             return '该品牌下有商品,不能删除!';
         }else{
 
@@ -77,7 +84,7 @@ class BrandController extends Controller
             $model->save(false);//保存数
             //删除该记录对应
             return 'yes';
-        }*/
+        }
 
     }
     //修改品牌
@@ -87,17 +94,10 @@ class BrandController extends Controller
         if ($request->isPost){
             //接受数据
             $model->load($request->post());
-            //将上上传文件分装成uploadefile对象
-            $model->imgFile=UploadedFile::getInstance($model,'imgFile');
+
             if ($model->validate()){
                 //通过验证
-                //设置文件保存路径
-                $ext=$model->imgFile->extension;//后缀
-                $file='/upload/brand/'.uniqid().'.'.$ext;
-                //保存文件
-                $model->imgFile->saveAs(\Yii::getAlias('@webroot').$file,0);
-                //保存路径到数据库
-                $model->logo=$file;
+
                 $model->save(false);//保存数据
                 \Yii::$app->session->setFlash('success','修改成功');
                 return $this->redirect(['list']);

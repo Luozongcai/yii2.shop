@@ -35,9 +35,9 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
+  /*  $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => '品牌', 'url' => ['/brand/list']],
+       ['label' => '品牌', 'url' => ['/brand/list']],
         ['label' => '文章分类', 'url' => ['/article/category-list']],
         ['label' => '文章列表', 'url' => ['/article/list']],
     ];
@@ -45,8 +45,8 @@ AppAsset::register($this);
         ['label' => 'Home', 'url' => ['/site/index']],
 
         ['label' => '品牌管理', 'items'=>[
-            ['label' => '品牌列表', 'url' => ['/brand/list']],
-            ['label' => '添加品牌', 'url' => ['/brand/add']],
+            ['label' => '品牌列表', 'url' => ['brand/list']],
+            ['label' => '添加品牌', 'url' => ['brand/add']],
         ]],
 
         ['label' => '文章管理', 'items'=>[
@@ -66,27 +66,37 @@ AppAsset::register($this);
         ]],
         ['label' => '用户管理', 'items'=>[
 
-            ['label' => '添加用户', 'url' => ['/user/add']],
-            ['label' => '用户列表', 'url' => ['/user/list']],
+            ['label' => '添加用户', 'url' => ['user/add']],
+            ['label' => '用户列表', 'url' => ['user/list']],
 
         ]],
 
         ['label' => 'RBAC', 'items'=>[
 
-            ['label' => '添加角色', 'url' => ['/auth/add-role']],
-            ['label' => '角色列表', 'url' => ['/auth/list-role']],
-            ['label' => '添加权限', 'url' => ['/auth/add-permissions']],
-            ['label' => '权限列表', 'url' => ['/auth/list-permissions']],
+            ['label' => '添加角色', 'url' => ['auth/add-role']],
+            ['label' => '角色列表', 'url' => ['auth/list-role']],
+            ['label' => '添加权限', 'url' => ['auth/add-permissions']],
+            ['label' => '权限列表', 'url' => ['auth/list-permissions']],
 
         ]],
+        ['label' => '菜单管理', 'items'=>[
 
-    ];
+            ['label' => '添加菜单', 'url' => ['menu/add']],
+            ['label' => '菜单列表', 'url' => ['menu/list']],
 
 
+        ]],
+    ];*/
+    $menuItems =[];
+    if (!Yii::$app->user->isGuest) {
+        $menuItems = ['label' => '改密码', 'url' => ['/user/pwd']];
+    }
 
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/user/login']];
     } else {
+        //登录时显示菜单
+       $menuItems = Yii::$app->user->identity->menus;
         $menuItems[] = '<li>'
             . Html::beginForm(['/user/logout'], 'post')
             . Html::submitButton(

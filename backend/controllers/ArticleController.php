@@ -19,6 +19,15 @@ use yii\web\Request;
 class ArticleController extends Controller
 
 {
+    public function  behaviors(){
+        return [
+            'rbac' => [
+                'class' =>\backend\filters\RnewFilter::className(),
+
+            ],
+        ];
+
+    }
     //添加文章分类
     public function actionCategoryAdd(){
         $model=new ArticleCategory();

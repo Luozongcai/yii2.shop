@@ -11,12 +11,15 @@ namespace backend\models;
 
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\filters\AccessControl;
 use yii\web\IdentityInterface;
 
 class User extends ActiveRecord implements IdentityInterface
 {
     public $password;
     public $roles;
+
+    const SCENARIO_Add = 'add';
 public function behaviors()
 {
     return [
@@ -49,12 +52,48 @@ public function behaviors()
     public function rules()
     {
         return [
-            [['username','password','email','roles'],'required'],
-            ['status','safe'],
+            [['username','email'],'required'],
+            [['status','roles'],'safe'],
             [['username'], 'string', 'max' => 255],
             [['password'], 'string', 'max' => 100],
+            ['password','required','on'=>[self::SCENARIO_Add]],//添加时生效 修改时不生效
         ];
 
+    }
+
+
+    //获取用户对应的菜单
+    public function getMenus(){
+    //根据下列样式拼装$menuItems
+        /*$menuItems = [
+            ['label'=>'下拉菜单','items'=>[
+                ['label'=>'添加分类','url'=>['goods/add-category']],
+                ['label'=>'分类列表','url'=>['goods/ztree']],
+            ]],
+        ];*/
+        $menuItems = [];
+        //获取所有一级菜单
+        $menus = Menu::find()->where(['parent_id'=>0])->all();
+        foreach ($menus as $menu){
+            $items = [];
+            //遍历该一级菜单的子菜单
+            foreach ($menu->children as $child){
+                //根据用户权限来确定是否显示该菜单
+                if(\Yii::$app->user->can($child->url)){
+                    $items[] =  ['label'=>$child->name,'url'=>[$child->url]];
+                }
+            }
+
+            $menuItem = ['label'=>$menu->name,'items'=>$items];
+            //将该组菜单放入菜单组里面
+            //如果没有二级菜单,则不显示一级菜单
+            if($items){
+                $menuItems[] = $menuItem;
+
+            }
+        }
+
+        return $menuItems;
     }
 
 
