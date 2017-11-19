@@ -238,7 +238,7 @@
 									</li>
 									<li>
 										<span>应付总额：</span>
-										<em class="total">￥<?=$money?>.00</em>
+										<em class="total">￥<?=$money+10?>.00</em>
 									</li>
 								</ul>
 							</td>
