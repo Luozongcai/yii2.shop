@@ -85,112 +85,7 @@ class UserController extends Controller
     }
 
 
-    //过滤器权限控制
-    /*public function behaviors()
-    {
 
-        $menss = [];
-        $all=[];
-        //获取所有一级菜单
-        $menus = Menu::find()->where(['parent_id'=>0])->all();
-        foreach ($menus as $menu){
-            //遍历该一级菜单的子菜单
-            foreach ($menu->children as $child){
-                //用户所有的权限路由
-
-                $all[] = $child->url;
-
-            }
-
-        }
-
-        foreach ($menus as $menu){
-            //遍历该一级菜单的子菜单
-            foreach ($menu->children as $child){
-                //用户所有的权限路由
-                if(\Yii::$app->user->can($child->url)){
-                    $menss[] = $child->url;
-                }
-            }
-
-        }
-
-
-        return [
-            'acf' => [//简单存取过滤器  简单权限控制
-                'class' => AccessControl::className(),
-                'only' => [$all],//$pers
-                'rules' => [
-                    [//允许登录用户访问
-                        'allow' => true,//允许
-                        'actions' =>[$menss],//操作
-                        'roles' => ['@'],//角色 ?未登录 @已登录
-                    ],
-                    [
-                        //允许未登录用户访问info
-                        'allow' => true,
-                        'actions' => ['user/login','menu/list'],//$per
-                        'roles' => ['?']
-                    ],
-
-
-                ]
-            ]
-        ];
-    }*/
-//过滤器权限控制
-  /*  public function behaviors()
-    {
-
-        $menss = [];
-        $all=[];
-        //获取所有一级菜单
-        $menus = Menu::find()->where(['parent_id'=>0])->all();
-        foreach ($menus as $menu){
-            //遍历该一级菜单的子菜单
-            foreach ($menu->children as $child){
-                //用户所有的权限路由
-
-                $all[] = $child->url;
-
-            }
-
-        }
-
-        foreach ($menus as $menu){
-            //遍历该一级菜单的子菜单
-            foreach ($menu->children as $child){
-                //用户所有的权限路由
-                if(\Yii::$app->user->can($child->url)){
-                    $menss[] = $child->url;
-                }
-            }
-
-        }
-
-
-        return [
-            'acf' => [//简单存取过滤器  简单权限控制
-                'class' => AccessControl::className(),
-                'only' => [$all],//$pers
-                'rules' => [
-                    [//允许登录用户访问
-                        'allow' => true,//允许
-                        'actions' =>[$menss],//操作
-                        'roles' => ['@'],//角色 ?未登录 @已登录
-                    ],
-                    [
-                        //允许未登录用户访问info
-                        'allow' => true,
-                        'actions' => ['user/login','menu/list'],//$per
-                        'roles' => ['?']
-                    ],
-
-
-                ]
-            ]
-        ];
-    }*/
 
     //登录
     public function actionLogin(){
@@ -271,8 +166,6 @@ class UserController extends Controller
 
     //添加用户
     public function actionAdd(){
-
-
 
         $auth = \yii::$app->authManager;
         $model = new User();
