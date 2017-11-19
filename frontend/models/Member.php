@@ -14,12 +14,7 @@ use yii\web\IdentityInterface;
 
 class Member extends ActiveRecord implements IdentityInterface
 {
-   /* public $username;
-    public $email;
-    public $tel;*/
-  // public $password_hash;
-    //public $password;
-   // public $checkcode;
+
 
 
 
