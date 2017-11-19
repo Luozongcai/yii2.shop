@@ -34,7 +34,7 @@ public function actions()
 view:  
 
 ```
-echo \kucha\ueditor\UEditor::widget(['name' => 'xxxx']);
+echo \kucha\ueditor\UEditor::widget([]);
 ```
 
 或者：

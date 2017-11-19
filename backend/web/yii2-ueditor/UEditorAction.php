@@ -1,10 +1,10 @@
 <?php
-
 namespace kucha\ueditor;
 
 use Yii;
 use yii\base\Action;
 use yii\helpers\ArrayHelper;
+use yii\web\Response;
 
 class UEditorAction extends Action
 {
@@ -20,6 +20,13 @@ class UEditorAction extends Action
         Yii::$app->request->enableCsrfValidation = false;
         //默认设置
         $_config = require(__DIR__ . '/config.php');
+
+        //添加图片默认root路径；
+        $_config['imageRoot'] = Yii::getAlias('@webroot');
+        $_config['scrawlRoot'] = Yii::getAlias('@webroot');
+        $_config['videoRoot'] = Yii::getAlias('@webroot');
+        $_config['fileRoot'] = Yii::getAlias('@webroot');
+
         //load config file
         $this->config = ArrayHelper::merge($_config, $this->config);
         parent::init();
@@ -27,7 +34,12 @@ class UEditorAction extends Action
 
     public function run()
     {
-        $this->handleAction();
+        if (Yii::$app->request->get('callback',false)) {
+            Yii::$app->response->format = Response::FORMAT_JSONP;
+        } else {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+        }
+        return $this->handleAction();
     }
 
     /**
@@ -38,7 +50,7 @@ class UEditorAction extends Action
         $action = Yii::$app->request->get('action');
         switch ($action) {
             case 'config':
-                $result = json_encode($this->config);
+                $result = $this->config;
                 break;
 
             /* 上传图片 */
@@ -50,8 +62,12 @@ class UEditorAction extends Action
                 /* 上传文件 */
             case 'uploadfile':
                 $result = $this->actionUpload();
+                //处理返回的URL
+                if (substr($result['url'], 0, 1) != '/') {
+                    $result['url'] = '/' . $result['url'];
+                }
+                $result['url'] = Yii::getAlias('@web'.$result['url']);
                 break;
-
             /* 列出图片 */
             case 'listimage':
                 /* 列出文件 */
@@ -65,70 +81,62 @@ class UEditorAction extends Action
                 break;
 
             default:
-                $result = json_encode([
+                $result = [
                     'state' => '请求地址出错'
-                ]);
+                ];
                 break;
         }
         /* 输出结果 */
-        if (isset($_GET["callback"])) {
-            if (preg_match("/^[\w_]+$/", $_GET["callback"])) {
-                echo htmlspecialchars($_GET["callback"]) . '(' . $result . ')';
-            } else {
-                echo json_encode([
-                    'state' => 'callback参数不合法'
-                ]);
-            }
-        } else {
-            echo $result;
-        }
+
+        return $result;
+
     }
 
     /**
      * 上传
-     * @return string
+     * @return array
      */
     protected function actionUpload()
     {
         $base64 = "upload";
         switch (htmlspecialchars($_GET['action'])) {
             case 'uploadimage':
-                $config = [
-                    "pathRoot"   => ArrayHelper::getValue($this->config, "imageRoot", $_SERVER['DOCUMENT_ROOT']),
+                $config = array(
+                    "pathRoot" => ArrayHelper::getValue($this->config, "imageRoot", $_SERVER['DOCUMENT_ROOT']),
                     "pathFormat" => $this->config['imagePathFormat'],
-                    "maxSize"    => $this->config['imageMaxSize'],
+                    "maxSize" => $this->config['imageMaxSize'],
                     "allowFiles" => $this->config['imageAllowFiles']
-                ];
+                );
                 $fieldName = $this->config['imageFieldName'];
                 break;
             case 'uploadscrawl':
-                $config = [
-                    "pathRoot"   => ArrayHelper::getValue($this->config, "scrawlRoot", $_SERVER['DOCUMENT_ROOT']),
+                $config = array(
+                    "pathRoot" => ArrayHelper::getValue($this->config, "scrawlRoot", $_SERVER['DOCUMENT_ROOT']),
                     "pathFormat" => $this->config['scrawlPathFormat'],
-                    "maxSize"    => $this->config['scrawlMaxSize'],
+                    "maxSize" => $this->config['scrawlMaxSize'],
                     "allowFiles" => $this->config['scrawlAllowFiles'],
-                    "oriName"    => "scrawl.png"
-                ];
+                    "oriName" => "scrawl.png"
+                );
                 $fieldName = $this->config['scrawlFieldName'];
                 $base64 = "base64";
                 break;
             case 'uploadvideo':
-                $config = [
-                    "pathRoot"   => ArrayHelper::getValue($this->config, "videoRoot", $_SERVER['DOCUMENT_ROOT']),
+                $config = array(
+                    "pathRoot" => ArrayHelper::getValue($this->config, "videoRoot", $_SERVER['DOCUMENT_ROOT']),
                     "pathFormat" => $this->config['videoPathFormat'],
-                    "maxSize"    => $this->config['videoMaxSize'],
+                    "maxSize" => $this->config['videoMaxSize'],
                     "allowFiles" => $this->config['videoAllowFiles']
-                ];
+                );
                 $fieldName = $this->config['videoFieldName'];
                 break;
             case 'uploadfile':
             default:
-                $config = [
-                    "pathRoot"   => ArrayHelper::getValue($this->config, "fileRoot", $_SERVER['DOCUMENT_ROOT']),
+                $config = array(
+                    "pathRoot" => ArrayHelper::getValue($this->config, "fileRoot", $_SERVER['DOCUMENT_ROOT']),
                     "pathFormat" => $this->config['filePathFormat'],
-                    "maxSize"    => $this->config['fileMaxSize'],
+                    "maxSize" => $this->config['fileMaxSize'],
                     "allowFiles" => $this->config['fileAllowFiles']
-                ];
+                );
                 $fieldName = $this->config['fileFieldName'];
                 break;
         }
@@ -148,12 +156,12 @@ class UEditorAction extends Action
          */
 
         /* 返回数据 */
-        return json_encode($up->getFileInfo());
+        return $up->getFileInfo();
     }
 
     /**
      * 获取已上传的文件列表
-     * @return string
+     * @return array
      */
     protected function actionList()
     {
@@ -183,17 +191,17 @@ class UEditorAction extends Action
         $path = $_SERVER['DOCUMENT_ROOT'] . (substr($path, 0, 1) == "/" ? "" : "/") . $path;
         $files = $this->getfiles($path, $allowFiles);
         if (!count($files)) {
-            return json_encode([
+            return [
                 "state" => "no match file",
-                "list"  => [],
+                "list" => array(),
                 "start" => $start,
                 "total" => count($files)
-            ]);
+            ];
         }
 
         /* 获取指定范围的列表 */
         $len = count($files);
-        for ($i = min($end, $len) - 1, $list = []; $i < $len && $i >= 0 && $i >= $start; $i--) {
+        for ($i = min($end, $len) - 1, $list = array(); $i < $len && $i >= 0 && $i >= $start; $i--) {
             $list[] = $files[$i];
         }
 //倒序
@@ -202,33 +210,31 @@ class UEditorAction extends Action
 //}
 
         /* 返回数据 */
-        $result = json_encode([
+        return [
             "state" => "SUCCESS",
-            "list"  => $list,
+            "list" => $list,
             "start" => $start,
             "total" => count($files)
-        ]);
-
-        return $result;
+        ];
     }
 
     /**
      * 抓取远程图片
-     * @return string
+     * @return array
      */
     protected function actionCrawler()
     {
         /* 上传配置 */
-        $config = [
+        $config = array(
             "pathFormat" => $this->config['catcherPathFormat'],
-            "maxSize"    => $this->config['catcherMaxSize'],
+            "maxSize" => $this->config['catcherMaxSize'],
             "allowFiles" => $this->config['catcherAllowFiles'],
-            "oriName"    => "remote.png"
-        ];
+            "oriName" => "remote.png"
+        );
         $fieldName = $this->config['catcherFieldName'];
 
         /* 抓取远程图片 */
-        $list = [];
+        $list = array();
         if (isset($_POST[$fieldName])) {
             $source = $_POST[$fieldName];
         } else {
@@ -238,30 +244,30 @@ class UEditorAction extends Action
             $item = new Uploader($imgUrl, $config, "remote");
             $info = $item->getFileInfo();
             array_push($list, [
-                "state"    => $info["state"],
-                "url"      => $info["url"],
-                "size"     => $info["size"],
-                "title"    => htmlspecialchars($info["title"]),
+                "state" => $info["state"],
+                "url" => $info["url"],
+                "size" => $info["size"],
+                "title" => htmlspecialchars($info["title"]),
                 "original" => htmlspecialchars($info["original"]),
-                "source"   => htmlspecialchars($imgUrl)
+                "source" => htmlspecialchars($imgUrl)
             ]);
         }
 
         /* 返回抓取数据 */
-        return json_encode([
+        return [
             'state' => count($list) ? 'SUCCESS' : 'ERROR',
-            'list'  => $list
-        ]);
+            'list' => $list
+        ];
     }
 
     /**
      * 遍历获取目录下的指定类型的文件
-     * @param       $path
-     * @param       $allowFiles
+     * @param $path
+     * @param $allowFiles
      * @param array $files
      * @return array|null
      */
-    protected function getfiles($path, $allowFiles, &$files = [])
+    protected function getfiles($path, $allowFiles, &$files = array())
     {
         if (!is_dir($path)) return null;
         if (substr($path, strlen($path) - 1) != '/') $path .= '/';
@@ -273,10 +279,10 @@ class UEditorAction extends Action
                     $this->getfiles($path2, $allowFiles, $files);
                 } else {
                     if (preg_match("/\.(" . $allowFiles . ")$/i", $file)) {
-                        $files[] = [
-                            'url'   => substr($path2, strlen($_SERVER['DOCUMENT_ROOT'])),
+                        $files[] = array(
+                            'url' => substr($path2, strlen($_SERVER['DOCUMENT_ROOT'])),
                             'mtime' => filemtime($path2)
-                        ];
+                        );
                     }
                 }
             }

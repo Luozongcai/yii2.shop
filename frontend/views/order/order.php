@@ -112,7 +112,7 @@
 						<tbody>
 							<tr class="cur">	
 								<td>
-									<input type="radio"  value="1" name="delivery" checked="checked" />普通快递送货上门
+									<input type="radio" class="money" value="1"  id="10" name="delivery" checked="checked" />普通快递送货上门
 
 								</td>
 								<td>￥10.00</td>
@@ -120,19 +120,19 @@
 							</tr>
 							<tr>
 								
-								<td><input type="radio" value="2" name="delivery" />特快专递</td>
+								<td><input type="radio"class="money" value="2" id="40" name="delivery" />特快专递</td>
 								<td>￥40.00</td>
 								<td>每张订单不满499.00元,运费40.00元, 订单4...</td>
 							</tr>
 							<tr>
 								
-								<td><input type="radio"value="3" name="delivery" />加急快递送货上门</td>
+								<td><input type="radio"value="3" class="money" id="40" name="delivery" />加急快递送货上门</td>
 								<td>￥40.00</td>
 								<td>每张订单不满499.00元,运费40.00元, 订单4...</td>
 							</tr>
 							<tr>
 
-								<td><input type="radio" value="4" name="delivery" />平邮</td>
+								<td><input type="radio" value="4"   class="money" id="10" name="delivery" />平邮</td>
 								<td>￥10.00</td>
 								<td>每张订单不满499.00元,运费15.00元, 订单4...</td>
 							</tr>
@@ -238,7 +238,7 @@
 									</li>
 									<li>
 										<span>应付总额：</span>
-										<em>￥<?=$money?>.00</em>
+										<em class="total">￥<?=$money+10?>.00</em>
 									</li>
 								</ul>
 							</td>
@@ -254,7 +254,7 @@
 			<!--<a href=""><span>提交订单</span></a>-->
             <!--<input type="submit" class="input" value="提交订单" >-->
 
-			<p>应付总额：<strong>￥<?=$money?>.00元</strong>
+			<p>应付总额：<strong class="total">￥<?=$money+10?>.00元</strong>
                 <input type="submit" class="input" value="提交订单" style="height: 40px;background: #22ff76"></p>
 
 		</div>
@@ -288,5 +288,16 @@
 		</p>
 	</div>
 	<!-- 底部版权 end -->
+    <script >
+    $('.money').click(function () {
+    var mon = $(this).attr('id');
+    var total = $('.total').text();
+    var m = <?=$money?>;
+    var all = parseInt(mon)+m;
+    console.debug(all);
+    $('.myem').text('￥'+mon+'.00');
+    $('.total').text('￥'+all+'.00');
+   // $('.all').text('￥'+all+'.00');
+    </script>
 </body>
 </html>

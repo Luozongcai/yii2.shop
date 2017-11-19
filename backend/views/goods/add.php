@@ -129,7 +129,7 @@ echo $form->field($model2,'content')->widget('\kucha\ueditor\UEditor',
     //设置语言
     'lang' =>'zh-cn', //为 en
     //定制菜单
-    'toolbars' => [
+    /*'toolbars' => [
        [
             'fullscreen', 'source', 'undo', 'redo', '|',
             'fontsize',
@@ -139,7 +139,7 @@ echo $form->field($model2,'content')->widget('\kucha\ueditor\UEditor',
             'lineheight', '|',
             'indent', '|'
         ],
-    ]
+    ]*/
 ]
     ]);
 
