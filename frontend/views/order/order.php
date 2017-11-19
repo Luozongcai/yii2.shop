@@ -238,7 +238,7 @@
 									</li>
 									<li>
 										<span>应付总额：</span>
-										<em class="total">￥<?=$money+10?>.00</em>
+										<em class="total">￥<?=$money?>.00</em>
 									</li>
 								</ul>
 							</td>
@@ -288,16 +288,16 @@
 		</p>
 	</div>
 	<!-- 底部版权 end -->
-    <script >
+<!--    <script >
     $('.money').click(function () {
     var mon = $(this).attr('id');
     var total = $('.total').text();
-    var m = <?=$money?>;
+    var m = <?/*=$money*/?>;
     var all = parseInt(mon)+m;
     console.debug(all);
     $('.myem').text('￥'+mon+'.00');
     $('.total').text('￥'+all+'.00');
    // $('.all').text('￥'+all+'.00');
-    </script>
+    </script>-->
 </body>
 </html>
